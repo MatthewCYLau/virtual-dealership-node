@@ -4,7 +4,7 @@ const express = require('express');
 const hbs = require('hbs');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const sendMessage = require("./utils/message")
+const fetchCarData = require("./utils/fetchCarData")
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -52,50 +52,22 @@ const Message = mongoose.model(
 
 app.get('', (req, res) => {
 
-    Message.find({}).limit(5).sort({
-        'time': 'desc'
-    }).exec(function (err, foundMessages) {
+    fetchCarData((err, data) => {
 
         if (err) {
-            console.log(err);
-        } else {
-            res.render("index", {
-                messages: foundMessages
-            });
+            return console.log(err)
         }
+        res.render('index', {
+            carData: data.body.cars
+        });
 
-    });
+        console.log(data.body.cars[0].imageURL[0].outsideImage)
+    })
 });
 
 app.get('/message', (req, res) => {
     res.render('message');
 })
-
-app.post("/message", function (req, res) {
-
-    const slackChannel = "DE2QP24U8";
-    const messageBody = req.body.messageBody;
-    const slackAuthToken = process.env.SLACK_AUTH_TOKEN || process.env.AWS_SLACK_AUTH_TOKEN;
-
-    sendMessage(slackChannel, slackAuthToken, messageBody, (err) => {
-
-        if (err) {
-            console.log(err);
-        } else {
-            const message = new Message({
-                slackChannel,
-                messageBody,
-            });
-            message.save(function (err) {
-
-                if (!err) {
-                    console.log("Successfully saved new message")
-                    res.redirect("/success");
-                }
-            });
-        }
-    })
-});
 
 app.get('/success', (req, res) => {
 
