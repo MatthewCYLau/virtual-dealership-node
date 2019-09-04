@@ -1,0 +1,142 @@
+{{>header}}
+<section id="title">
+    <div class="container-fluid">
+
+        <nav class="navbar navbar-expand-md navbar-dark">
+
+            <a class="navbar-brand" href="/">Slackify Me!</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+                <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/message">Try Now!</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Sign Up</a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </nav>
+
+        <div class="row">
+
+            <div class="col-lg-7">
+                <h1 class="big-heading">Add emojis 😃❤️ to your Slack messages</h1>
+                <button type="button" class="btn btn-dark btn-lg download-button"><i class="fab fa-apple"></i> Mobile
+                    App</button>
+                <button type="button" class="btn btn-outline-light btn-lg download-button"><i
+                        class="fab fa-google-play"></i>
+                    Coming Soon</button>
+            </div>
+
+            <div class="col-lg-5">
+                <img src="/img/smartphone.svg" alt="iphone-mockup" class="title-image">
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section id="features">
+
+    <div class="row">
+
+        <div class="col-lg-4 feature-box">
+            <i class="icon fas fa-check-circle"></i>
+            <h3>Easy to use.</h3>
+            <p>So easy to use, even QRM could do it.</p>
+        </div>
+        <div class="col-lg-4 feature-box">
+            <i class="icon fas fa-bullseye"></i>
+            <h3>Elite emojis</h3>
+            <p>We have all the emojis, the greatest emojis.</p>
+        </div>
+        <div class="col-lg-4 feature-box">
+            <i class="icon fas fa-heart"></i>
+            <h3>Guaranteed to work.</h3>
+            <p>Deliver your message in style or your money back.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="testimonials">
+
+    <div id="testimonial-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <h2>I no longer have to manually add emojis. I've found the hottest NodeJS app in town. Pow!</h2>
+                <img class="testimonial-image" src="/img/boy.svg" alt="man-profile">
+                <em>Chad, London</em>
+            </div>
+            <div class="carousel-item">
+                <h2 class="testimonial-text">My phone used to be so lonely, but with Slackify Me, my phone has been
+                    buzzing all
+                    the time. I think.</h2>
+                <img class="testimonial-image" src="/img/girl.svg" alt="lady-profile">
+                <em>Tracy, Warrington</em>
+            </div>
+
+        </div>
+
+        <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span> </a>
+        <a class="carousel-control-next" href="#testimonial-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span></a>
+    </div>
+</section>
+
+
+<section id="tryNow">
+
+    <h2>Most Recent Messages</h2>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+
+                <th scope="col" style="width: 25%">Slack Channel</th>
+                <th scope="col" style="width: 75%">Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each messages}}
+            <tr>
+                <td>{{this.slackChannel}}</td>
+                <td>{{this.messageBody}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</section>
+
+<!-- Call to Action -->
+
+<section id="cta">
+    <div class="container">
+        <h3 class="cta-heading">Find your destined emojis today</h3>
+        <button type="button" class="btn btn-dark btn-lg download-button"><i class="fab fa-apple"></i>
+            Mobile App</button>
+        <button type="button" class="btn btn-light btn-lg download-button"><i class="fab fa-google-play"></i>
+            Coming Soon</button>
+
+    </div>
+
+</section>
+{{>footer}}
