@@ -4,7 +4,7 @@ const express = require('express');
 const hbs = require('hbs');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const fetchCarData = require("./utils/fetchCarData")
+const fetchAllCarsData = require("./utils/fetchAllCarsData")
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -52,7 +52,7 @@ const Message = mongoose.model(
 
 app.get('', (req, res) => {
 
-    fetchCarData((err, data) => {
+    fetchAllCarsData((err, data) => {
 
         if (err) {
             return console.log(err)
@@ -63,6 +63,13 @@ app.get('', (req, res) => {
 
         console.log(data.body.cars[0].imageURL[0].outsideImage)
     })
+});
+
+app.get('/car/:inventoryId', (req, res) => {
+
+    const inventoryId = req.params.inventoryId;
+
+    res.render('car');
 });
 
 app.get('/message', (req, res) => {
