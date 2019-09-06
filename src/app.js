@@ -29,24 +29,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-//Setup MongoDB Atlas
-mongoose.connect("mongodb+srv://admin-matlau:"+process.env.MONGO_DB_PASSWORD+"@mattewcylau-5ltcp.mongodb.net/slackifymeDB", {
-    useNewUrlParser: true
-});
-
-//Setup message schema
-const messageSchema = {
-    slackChannel: String,
-    messageBody: String,
-    time: {
-        type: Date,
-        default: Date.now
-    }
-}
-
-const Message = mongoose.model(
-    "Message", messageSchema
-);
 
 //Routing
 
@@ -60,8 +42,6 @@ app.get('', (req, res) => {
         res.render('index', {
             carData: data.body.cars
         });
-
-        console.log(data.body.cars[0].imageURL[0].outsideImage)
     }))
 });
 
