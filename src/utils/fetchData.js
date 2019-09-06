@@ -1,8 +1,8 @@
 const request = require("request");
 
-const fetchAllCarsData = (callback) => {
+const fetchData = (inventoryId, callback) => {
 
-    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/inventory";
+    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/inventory/"+inventoryId;
     request({
         url,
         json: true,
@@ -16,4 +16,4 @@ const fetchAllCarsData = (callback) => {
     });
 };
 
-module.exports = fetchAllCarsData;
+module.exports = fetchData;

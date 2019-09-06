@@ -15,15 +15,15 @@
                 <ul class="navbar-nav ml-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/message">Try Now!</a>
+                        <a class="nav-link" href="">View Inventory</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="">Login</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign Up</a>
+                        <a class="nav-link" href="">Sign Up</a>
                     </li>
 
                 </ul>
@@ -115,8 +115,12 @@
 
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
-                    <img class="card-img-top" src={{this.imageURL.[0].outsideImage}} alt="Card image cap">
+                    {{!-- <img class="card-img-top" src={{this.imageURL.[0].outsideImage}} alt="Card image cap"> --}}
+                    <img class="card-img-top"
+                        src="https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/body-image/public/911-road-3629a.jpg"
+                        alt="Card image cap">
                     <div class="card-body">
+                        <h3>{{this.model.modelId}}</h3>
                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
                             additional content. This content is a little bit longer.</p>
                         <div class="d-flex justify-content-between align-items-center">
