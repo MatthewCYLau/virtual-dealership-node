@@ -1,0 +1,24 @@
+language: node_js
+
+node_js:
+  - "8"
+
+sudo: required
+
+services:
+  -docker
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESSKEYID
+  secret_access_key:
+    secure: "$SECRETACCESSKEY"
+  region: "us-east-1"
+  app: "Virtual-Dealership"
+  env: "Virtual-Dealership-dev "
+  bucket_name: "matlau.virtual.dealership"
+  on:
+    branch: master
+
+after_deploy:
+  - echno "Deployment complete"
