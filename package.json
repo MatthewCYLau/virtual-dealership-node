@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@okta/oidc-middleware": "^2.0.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
@@ -19,5 +20,8 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local-mongoose": "^5.0.1",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }

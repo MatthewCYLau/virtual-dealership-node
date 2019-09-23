@@ -8,6 +8,8 @@ const fetchData = require("./utils/fetchData")
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+const { ExpressOIDC } = require('@okta/oidc-middleware');
 
 const app = express();
 
@@ -57,10 +59,12 @@ app.get('/car/:inventoryId', (req, res) => {
        
         const modelId = data.body.cars[0].model.modelId;
         const modelName = data.body.cars[0].model.modelName;
+        const carImageURL = data.body.cars[0].imageURL[0].outsideImage;
 
         res.render('car', {
             modelId,
-            modelName
+            modelName,
+            carImageURL
         });
     }))    
 });
@@ -69,9 +73,9 @@ app.get('/message', (req, res) => {
     res.render('message');
 })
 
-app.get('/success', (req, res) => {
+app.get('/login', (req, res) => {
 
-    res.render('success')
+    res.render('login')
 
 })
 

@@ -23,7 +23,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="">Sign Up</a>
+                        <a class="nav-link" href="/signup">Sign Up</a>
                     </li>
 
                 </ul>
@@ -116,7 +116,7 @@
                 <div class="card mb-4 box-shadow">
                     {{!-- <img class="card-img-top" src={{this.imageURL.[0].outsideImage}} alt="Card image cap"> --}}
                     <img class="card-img-top"
-                        src="https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/body-image/public/911-road-3629a.jpg"
+                        src={{this.imageURL.[0].outsideImage}}
                         alt="Card image cap">
                     <div class="card-body">
                         <h3>{{this.model.modelId}}</h3>
