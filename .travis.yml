@@ -8,17 +8,17 @@ sudo: required
 services:
   -docker
 
-deploy:
-  provider: elasticbeanstalk
-  access_key_id: $ACCESSKEYID
-  secret_access_key:
-    secure: "$SECRETACCESSKEY"
-  region: "us-east-1"
-  app: "Virtual-Dealership"
-  env: "Virtual-Dealership-dev "
-  bucket_name: "matlau.virtual.dealership"
-  on:
-    branch: master
+# deploy:
+#   provider: elasticbeanstalk
+#   access_key_id: $ACCESSKEYID
+#   secret_access_key:
+#     secure: "$SECRETACCESSKEY"
+#   region: "us-east-1"
+#   app: "Virtual-Dealership"
+#   env: "Virtual-Dealership-dev "
+#   bucket_name: "matlau.virtual.dealership"
+#   on:
+#     branch: master
 
 after_deploy:
   - echno "Deployment complete"
