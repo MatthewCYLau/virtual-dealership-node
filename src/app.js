@@ -9,7 +9,9 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
-const { ExpressOIDC } = require('@okta/oidc-middleware');
+const {
+    ExpressOIDC
+} = require('@okta/oidc-middleware');
 
 const app = express();
 
@@ -31,8 +33,27 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
 //Routing
+
+// session support is required to use ExpressOIDC
+app.use(session({
+    secret: 'this should be secure',
+    resave: true,
+    saveUninitialized: false
+}));
+
+
+const oidc = new ExpressOIDC({
+    issuer: 'https://dev-987225.okta.com/oauth2/default',
+    client_id: process.env.LOCAL_CLIENT_ID,
+    client_secret: process.env.LOCAL_CLIENT_SECRET,
+    redirect_uri: 'http://localhost:3000/authorization-code/callback',
+    scope: 'openid profile',
+    appBaseUrl: 'http://localhost:3000',
+});
+
+// ExpressOIDC will attach handlers for the /login and /authorization-code/callback routes
+app.use(oidc.router);
 
 app.get('', (req, res) => {
 
@@ -56,7 +77,7 @@ app.get('/car/:inventoryId', (req, res) => {
         if (err) {
             return console.log(err)
         }
-       
+
         const modelId = data.body.cars[0].model.modelId;
         const modelName = data.body.cars[0].model.modelName;
         const carImageURL = data.body.cars[0].imageURL[0].outsideImage;
@@ -66,29 +87,36 @@ app.get('/car/:inventoryId', (req, res) => {
             modelName,
             carImageURL
         });
-    }))    
+    }))
 });
 
 app.get('/message', (req, res) => {
     res.render('message');
 })
 
-app.get('/login', (req, res) => {
-
-    res.render('login')
-
-})
-
 app.get('/signup', (req, res) => {
     res.render('signup');
 })
 
+app.get('/portal/welcome', (req, res) => {
+    if (req.userContext.userinfo) {
+        const loggedInUser = req.userContext.userinfo.name;
+        res.render('welcome_user', {
+            loggedInUser
+        });
+    } else {
+        res.redirect('login');
+    }
+});
+
 app.get('*', (req, res) => {
-
     res.render('404')
-
 })
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000')
-})
+oidc.on('ready', () => {
+    app.listen(3000, () => console.log(`Server started on port 3000`));
+});
+
+oidc.on('error', err => {
+    console.log('Unable to configure ExpressOIDC', err);
+});
