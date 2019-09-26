@@ -3,8 +3,10 @@ const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
 const mongoose = require("mongoose");
+
 const bodyParser = require("body-parser");
 const fetchData = require("./utils/fetchData")
+
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
