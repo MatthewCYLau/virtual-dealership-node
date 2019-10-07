@@ -44,7 +44,6 @@ app.use(session({
     saveUninitialized: false
 }));
 
-
 const oidc = new ExpressOIDC({
     issuer: 'https://dev-987225.okta.com/oauth2/default',
     client_id: process.env.LOCAL_CLIENT_ID,
@@ -65,7 +64,7 @@ app.get('', (req, res) => {
             return console.log(err)
         }
         res.render('index', {
-            carData: data.body.cars
+            carData: data.body.inventory
         });
     }))
 });
@@ -82,7 +81,7 @@ app.get('/car/:inventoryId', (req, res) => {
 
         const modelId = data.body.cars[0].model.modelId;
         const modelName = data.body.cars[0].model.modelName;
-        const carImageURL = data.body.cars[0].imageURL[0].outsideImage;
+        const carImageURL = data.body.cars[0].images.mainImage.url;
 
         res.render('car', {
             modelId,
