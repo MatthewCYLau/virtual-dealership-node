@@ -5,7 +5,7 @@ const hbs = require('hbs');
 const mongoose = require("mongoose");
 
 const bodyParser = require("body-parser");
-const fetchData = require("./utils/fetchData")
+const getInventory = require("./utils/getInventory")
 
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -58,7 +58,7 @@ app.use(oidc.router);
 
 app.get('', (req, res) => {
 
-    fetchData("", ((err, data) => {
+    getInventory("", ((err, data) => {
 
         if (err) {
             return console.log(err)
@@ -73,7 +73,7 @@ app.get('/car/:inventoryId', (req, res) => {
 
     const inventoryId = req.params.inventoryId;
 
-    fetchData(inventoryId, ((err, data) => {
+    getInventory(inventoryId, ((err, data) => {
 
         if (err) {
             return console.log(err)
