@@ -112,6 +112,14 @@ app.get('/portal/welcome', (req, res) => {
     }
 });
 
+app.get('/portal/orders', (req, res) => {
+    res.render('orders')
+})
+
+app.get('/portal/orders/1', (req, res) => {
+    res.render('order_status')
+})
+
 app.get('*', (req, res) => {
     res.render('404')
 })
