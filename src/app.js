@@ -82,11 +82,13 @@ app.get('/car/:inventoryId', (req, res) => {
         const modelId = data.body.cars[0].model.modelId;
         const modelName = data.body.cars[0].model.modelName;
         const carImageURL = data.body.cars[0].images.mainImage.url;
+        const price = data.body.cars[0].price;
 
         res.render('car', {
             modelId,
             modelName,
-            carImageURL
+            carImageURL,
+            price
         });
     }))
 });
