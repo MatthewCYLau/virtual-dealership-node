@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 
 const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
+const getOrders = require("./utils/getOrders")
+
 
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -56,6 +58,7 @@ const oidc = new ExpressOIDC({
 // ExpressOIDC will attach handlers for the /login and /authorization-code/callback routes
 app.use(oidc.router);
 
+
 app.get('', (req, res) => {
 
     getInventory("", ((err, data) => {
@@ -83,15 +86,22 @@ app.get('/car/:inventoryId', (req, res) => {
         const modelName = data.body.cars[0].model.modelName;
         const carImageURL = data.body.cars[0].images.mainImage.url;
         const price = data.body.cars[0].price;
+        const priceCurrency = data.body.cars[0].priceCurrency;
+        const priceDisclaimer = data.body.cars[0].priceDisclaimer;
+        const description = data.body.cars[0].description
 
         res.render('car', {
             modelId,
             modelName,
             carImageURL,
-            price
+            price, 
+            priceCurrency, 
+            priceDisclaimer,
+            description
         });
     }))
 });
+
 
 app.get('/message', (req, res) => {
     res.render('message');
@@ -113,12 +123,32 @@ app.get('/portal/welcome', (req, res) => {
 });
 
 app.get('/portal/orders', (req, res) => {
-    res.render('orders')
+    
+    getOrders("", ((err, data) => {
+
+        if (err) {
+            return console.log(err)
+        }
+        res.render('orders', {
+            orders: data.body.orders
+        });
+    }))
+    
 })
 
-app.get('/portal/orders/1', (req, res) => {
-    res.render('order_status')
-})
+app.get('/portal/orders/:orderId', (req, res) => {
+
+    const orderId = req.params.orderId;
+
+    getOrders(orderId, ((err, data) => {
+
+        if (err) {
+            return console.log(err)
+        }
+
+        res.render('order_status');
+    }))
+});
 
 app.get('*', (req, res) => {
     res.render('404')

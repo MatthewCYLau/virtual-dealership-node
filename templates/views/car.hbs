@@ -7,13 +7,13 @@
         <div class="col-md-7 order-md-2">
             <h2 class="featurette-heading">{{modelId}}<br><span class="text-muted">{{modelName}}</span>
             </h2>
-            <p class="lead">Some amazing description about cars</p>
-            <h4>Price: {{price}}</h4>
+            <h4>Price: {{priceCurrency}} {{price}}</h4>
+            <p class="text-muted">{{priceDisclaimer}}</p>
+           <p> {{description}}</p>
+            <a href="" class="btn btn-primary order-now-btn">Order Now</a>
         </div>
         <div class="col-md-5 order-md-1">
-            <img class="featurette-image img-fluid mx-auto"
-                src={{carImageURL}}
-                alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" src={{carImageURL}} alt="Generic placeholder image">
         </div>
     </div>
 
