@@ -3,6 +3,8 @@
 
 <div class="container orders-container">
     <h1>View All Orders</h1>
+    <br>
+    <h6>Customer ID: {{customerId}}</h6>
 
     {{#each orders}}
 
@@ -17,8 +19,6 @@
         <a class="btn btn-primary view-order-status-button" href="/portal/orders/{{this.orderId}}">Order Status</a>
 
     </div>
-
-
     {{/each}}
 
 </div>

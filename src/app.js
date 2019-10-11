@@ -2,16 +2,11 @@ const dotenv = require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
-const mongoose = require("mongoose");
 
 const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
 const getOrders = require("./utils/getOrders")
 
-
-const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const {
     ExpressOIDC
@@ -94,18 +89,13 @@ app.get('/car/:inventoryId', (req, res) => {
             modelId,
             modelName,
             carImageURL,
-            price, 
-            priceCurrency, 
+            price,
+            priceCurrency,
             priceDisclaimer,
             description
         });
     }))
 });
-
-
-app.get('/message', (req, res) => {
-    res.render('message');
-})
 
 app.get('/signup', (req, res) => {
     res.render('signup');
@@ -123,17 +113,18 @@ app.get('/portal/welcome', (req, res) => {
 });
 
 app.get('/portal/orders', (req, res) => {
-    
+
     getOrders("", ((err, data) => {
 
         if (err) {
             return console.log(err)
         }
         res.render('orders', {
-            orders: data.body.orders
+            orders: data.body.orders,
+            customerId: data.body.customerId
         });
     }))
-    
+
 })
 
 app.get('/portal/orders/:orderId', (req, res) => {
@@ -146,7 +137,20 @@ app.get('/portal/orders/:orderId', (req, res) => {
             return console.log(err)
         }
 
-        res.render('order_status');
+        var orderStatus = "0";
+
+        if ((data.body.orderStatus) === "Completed") {
+            orderStatus = "100"
+        } else {
+            orderStatus = "50"
+        }
+
+        res.render('order_status', {
+            orderId: data.body.orderId,
+            orderCreatedUTCDateAndTime: data.body.orderCreatedUTCDateAndTime,
+            orderStatus,
+            orderItems: data.body.orderItems
+        });
     }))
 });
 
