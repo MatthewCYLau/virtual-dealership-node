@@ -9,8 +9,37 @@
             </h2>
             <h4>Price: {{priceCurrency}} {{price}}</h4>
             <p class="text-muted">{{priceDisclaimer}}</p>
-           <p> {{description}}</p>
-            <a href="/portal/orders" class="btn btn-primary order-now-btn">Order Now</a>
+            <p> {{description}}</p>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Place Order
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Order Confirmed!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Thank you for ordering {{modelId}} {{modelName}}
+                        </div>
+                        <div class="modal-footer">
+                            <a href="/portal/orders" class="btn btn-primary order-now-btn">View Your Orders</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- <a href="/portal/orders" class="btn btn-primary order-now-btn">Order Now</a> --}}
+
+
         </div>
         <div class="col-md-5 order-md-1">
             <img class="featurette-image img-fluid mx-auto" src={{carImageURL}} alt="Generic placeholder image">
