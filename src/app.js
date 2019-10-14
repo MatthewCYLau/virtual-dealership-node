@@ -32,8 +32,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-//Routing
-
 // session support is required to use ExpressOIDC
 app.use(session({
     secret: 'this should be secure',
@@ -54,6 +52,38 @@ const oidc = new ExpressOIDC({
 app.use(oidc.router);
 
 
+
+//OAuth2 settings
+var passport = require('passport'),
+    OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+
+passport.use('provider', new OAuth2Strategy({
+        authorizationURL: 'https://dev-570822.okta.com/oauth2/v1/authorize',
+        tokenURL: 'https://dev-570822.okta.com/oauth2/v1/token',
+        clientID: '0oatxw4axNIEx06aV356',
+        clientSecret: 'fP1m8eCBcKQ7LMKfhcGOGD3Yu9rfLoZLsUOFWITR',
+        callbackURL: 'http://localhost:3000/auth/provider/callback',
+        state:'foobar'
+    },
+    function (accessToken, refreshToken, profile, done) {
+        console.log(accessToken);
+    }
+));
+
+app.get('/auth/provider',
+    passport.authenticate('provider', {
+        scope: ['openid', 'email', 'profile']
+    })
+);
+
+app.get('/auth/provider/callback',
+    passport.authenticate('provider', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+    }));
+
+
+//Routing
 app.get('', (req, res) => {
 
     getInventory("", ((err, data) => {
@@ -64,6 +94,7 @@ app.get('', (req, res) => {
         res.render('index', {
             carData: data.body.inventory
         });
+
     }))
 });
 
