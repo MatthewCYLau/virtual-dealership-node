@@ -1,16 +1,14 @@
-const dotenv = require('dotenv').config();
+const session = require('express-session');
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
+const port = process.env.PORT
+const passport = require('passport')
 
 const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
 const getOrders = require("./utils/getOrders")
-
-const session = require('express-session');
-const {
-    ExpressOIDC
-} = require('@okta/oidc-middleware');
+const cookieParser = require('cookie-parser')
 
 const app = express();
 
@@ -32,43 +30,44 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-// session support is required to use ExpressOIDC
+
 app.use(session({
     secret: 'this should be secure',
     resave: true,
     saveUninitialized: false
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-const oidc = new ExpressOIDC({
-    issuer: 'https://dev-987225.okta.com/oauth2/default',
-    client_id: process.env.LOCAL_CLIENT_ID,
-    client_secret: process.env.LOCAL_CLIENT_SECRET,
-    redirect_uri: 'http://localhost:3000/authorization-code/callback',
-    scope: 'openid profile',
-    appBaseUrl: 'http://localhost:3000',
-});
-
-// ExpressOIDC will attach handlers for the /login and /authorization-code/callback routes
-app.use(oidc.router);
-
-
+//Setup cookie parser
+app.use(cookieParser());
 
 //OAuth2 settings
-var passport = require('passport'),
-    OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 passport.use('provider', new OAuth2Strategy({
         authorizationURL: 'https://dev-570822.okta.com/oauth2/v1/authorize',
         tokenURL: 'https://dev-570822.okta.com/oauth2/v1/token',
         clientID: '0oatxw4axNIEx06aV356',
-        clientSecret: 'fP1m8eCBcKQ7LMKfhcGOGD3Yu9rfLoZLsUOFWITR',
+        clientSecret: process.env.CLIENT_SECRET,
         callbackURL: 'http://localhost:3000/auth/provider/callback',
-        state:'foobar'
+        state: 'foobar'
     },
     function (accessToken, refreshToken, profile, done) {
-        console.log(accessToken);
+
+        done(null, profile);
     }
 ));
+
+// Used to stuff a piece of information into a cookie
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+// Used to decode the received cookie and persist session
+passport.deserializeUser((user, done) => {
+    done(null, user);
+});
 
 app.get('/auth/provider',
     passport.authenticate('provider', {
@@ -79,9 +78,8 @@ app.get('/auth/provider',
 app.get('/auth/provider/callback',
     passport.authenticate('provider', {
         successRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/signup'
     }));
-
 
 //Routing
 app.get('', (req, res) => {
@@ -132,16 +130,6 @@ app.get('/signup', (req, res) => {
     res.render('signup');
 })
 
-app.get('/portal/welcome', (req, res) => {
-    if (req.userContext.userinfo) {
-        const loggedInUser = req.userContext.userinfo.name;
-        res.render('welcome_user', {
-            loggedInUser
-        });
-    } else {
-        res.redirect('login');
-    }
-});
 
 app.get('/portal/orders', (req, res) => {
 
@@ -189,10 +177,6 @@ app.get('*', (req, res) => {
     res.render('404')
 })
 
-oidc.on('ready', () => {
-    app.listen(3000, () => console.log(`Server started on port 3000`));
-});
-
-oidc.on('error', err => {
-    console.log('Unable to configure ExpressOIDC', err);
-});
+app.listen(port, () => {
+    console.log('Server is up on port ' + port)
+})
