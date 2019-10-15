@@ -14,17 +14,15 @@
 
                 <ul class="navbar-nav ml-auto">
 
+                    {{#if user}}
                     <li class="nav-item">
-                        <a class="nav-link" href="">View Inventory</a>
+                        <a class="nav-link" href="/logout">Logout</a>
                     </li>
-
+                    {{else}}
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="/auth/provider">Login</a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign Up</a>
-                    </li>
+                    {{/if}}
 
                 </ul>
 
@@ -80,7 +78,8 @@
     <div id="testimonial-carousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <h2>I no longer have to visit my local dealership. I've found the hottest Virtual Dealership in town. Pow!</h2>
+                <h2>I no longer have to visit my local dealership. I've found the hottest Virtual Dealership in town.
+                    Pow!</h2>
                 <img class="testimonial-image" src="/img/boy.svg" alt="man-profile">
                 <em>Chad, London</em>
             </div>
@@ -115,9 +114,7 @@
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
                     {{!-- <img class="card-img-top" src={{this.imageURL.[0].outsideImage}} alt="Card image cap"> --}}
-                    <img class="card-img-top"
-                        src={{this.images.mainImage.url}}
-                        alt="Card image cap">
+                    <img class="card-img-top" src={{this.images.mainImage.url}} alt="Card image cap">
                     <div class="card-body">
                         <h3>{{this.model.modelId}}</h3>
                         <p class="card-text">Price: {{this.price}} {{this.priceCurrency}}</p>
@@ -142,6 +139,9 @@
 <section id="cta">
     <div class="container">
         <h3 class="cta-heading">Find your destined cars today</h3>
+
+        <a href="/auth/provider" class="btn btn-dark btn-lg download-button">Sign Up Now!</a>
+
     </div>
 
 </section>

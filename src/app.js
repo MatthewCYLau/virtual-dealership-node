@@ -30,7 +30,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-
 app.use(session({
     secret: 'this should be secure',
     resave: true,
@@ -46,16 +45,15 @@ app.use(cookieParser());
 OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 passport.use('provider', new OAuth2Strategy({
-        authorizationURL: 'https://dev-570822.okta.com/oauth2/v1/authorize',
-        tokenURL: 'https://dev-570822.okta.com/oauth2/v1/token',
-        clientID: '0oatxw4axNIEx06aV356',
+        authorizationURL: process.env.AUTH_URL,
+        tokenURL: process.env.TOKEN_URL,
+        clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         callbackURL: 'http://localhost:3000/auth/provider/callback',
         state: 'foobar'
     },
     function (accessToken, refreshToken, profile, done) {
-
-        done(null, profile);
+        return done(null, accessToken, profile);
     }
 ));
 
@@ -77,9 +75,24 @@ app.get('/auth/provider',
 
 app.get('/auth/provider/callback',
     passport.authenticate('provider', {
-        successRedirect: '/',
-        failureRedirect: '/signup'
-    }));
+        //successRedirect: '/',
+        failureRedirect: '/auth/provider'
+    }), (req, res) => {
+        // Successful authentication, redirect to secrets.
+
+        res.cookie('auth_token', req.user)
+        res.redirect("/");
+    });
+
+// Middleware to check if the user is authenticated
+const auth = (req, res, next) => {
+    if (req.user) {
+        next();
+    } else {
+        console.log('User is not authenticated')
+        res.redirect('/auth/provider');
+    }
+}
 
 //Routing
 app.get('', (req, res) => {
@@ -90,7 +103,8 @@ app.get('', (req, res) => {
             return console.log(err)
         }
         res.render('index', {
-            carData: data.body.inventory
+            carData: data.body.inventory,
+            user: req.user
         });
 
     }))
@@ -98,6 +112,7 @@ app.get('', (req, res) => {
 
 app.get('/car/:inventoryId', (req, res) => {
 
+    const user =  req.user;
     const inventoryId = req.params.inventoryId;
 
     getInventory(inventoryId, ((err, data) => {
@@ -121,17 +136,13 @@ app.get('/car/:inventoryId', (req, res) => {
             price,
             priceCurrency,
             priceDisclaimer,
-            description
+            description,
+            user
         });
     }))
 });
 
-app.get('/signup', (req, res) => {
-    res.render('signup');
-})
-
-
-app.get('/portal/orders', (req, res) => {
+app.get('/portal/orders', auth, (req, res) => {
 
     getOrders("", ((err, data) => {
 
@@ -140,13 +151,14 @@ app.get('/portal/orders', (req, res) => {
         }
         res.render('orders', {
             orders: data.body.orders,
-            customerId: data.body.customerId
+            customerId: data.body.customerId,
+            user:req.user
         });
     }))
 
 })
 
-app.get('/portal/orders/:orderId', (req, res) => {
+app.get('/portal/orders/:orderId', auth, (req, res) => {
 
     const orderId = req.params.orderId;
 
@@ -171,6 +183,11 @@ app.get('/portal/orders/:orderId', (req, res) => {
             orderItems: data.body.orderItems
         });
     }))
+});
+
+app.get('/logout', (req, res) => {
+    req.logout(); 
+    res.redirect('/');
 });
 
 app.get('*', (req, res) => {
