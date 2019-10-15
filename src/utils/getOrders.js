@@ -1,9 +1,12 @@
 const request = require("request");
-const dotenv = require('dotenv').config();
 
 const getOrders = (orderId, callback) => {
 
     const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/orders/" + orderId;
+    
+    const token = req.cookies['auth_token']
+    console.log(token);
+
     const authToken = process.env.AUTH_TOKEN;
     const headers = {
         'Authorization': 'Bearer ' + authToken
