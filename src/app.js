@@ -49,7 +49,7 @@ passport.use('provider', new OAuth2Strategy({
         tokenURL: process.env.TOKEN_URL,
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: 'http://localhost:3000/auth/provider/callback',
+        callbackURL: process.env.CALLBACK_URL,
         state: 'foobar'
     },
     function (accessToken, refreshToken, profile, done) {
