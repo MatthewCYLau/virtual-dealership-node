@@ -112,7 +112,7 @@ app.get('', (req, res) => {
 
 app.get('/car/:inventoryId', (req, res) => {
 
-    const user =  req.user;
+    const user = req.user;
     const inventoryId = req.params.inventoryId;
 
     getInventory(inventoryId, ((err, data) => {
@@ -144,7 +144,8 @@ app.get('/car/:inventoryId', (req, res) => {
 
 app.get('/portal/orders', auth, (req, res) => {
 
-    getOrders("", ((err, data) => {
+    const token = req.cookies['auth_token']
+    getOrders("", token, ((err, data) => {
 
         if (err) {
             return console.log(err)
@@ -152,7 +153,7 @@ app.get('/portal/orders', auth, (req, res) => {
         res.render('orders', {
             orders: data.body.orders,
             customerId: data.body.customerId,
-            user:req.user
+            user: req.user
         });
     }))
 
@@ -160,9 +161,10 @@ app.get('/portal/orders', auth, (req, res) => {
 
 app.get('/portal/orders/:orderId', auth, (req, res) => {
 
+    const token = req.cookies['auth_token']
     const orderId = req.params.orderId;
 
-    getOrders(orderId, ((err, data) => {
+    getOrders(orderId, token, ((err, data) => {
 
         if (err) {
             return console.log(err)
@@ -186,7 +188,7 @@ app.get('/portal/orders/:orderId', auth, (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-    req.logout(); 
+    req.logout();
     res.redirect('/');
 });
 
