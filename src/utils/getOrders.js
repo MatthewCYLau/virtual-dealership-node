@@ -2,7 +2,7 @@ const request = require("request");
 
 const getOrders = (orderId, token, callback) => {
 
-    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/orders/" + orderId;
+    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v2/orders/" + orderId;
     const headers = {
         'Authorization': 'Bearer ' + token
     }
