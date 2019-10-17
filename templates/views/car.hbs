@@ -31,7 +31,10 @@
                             Please confirm your order: {{modelId}} {{modelName}}
                         </div>
                         <div class="modal-footer">
-                            <a href="/portal/orders" class="btn btn-primary order-now-btn">Confirm</a>
+                            <form action="/orders" method="POST">
+                                <input type="hidden" name="inventoryId" value="{{inventoryId}}">
+                                <button type="submit" class="btn btn-primary">Confirm</button>
+                            </form>
                         </div>
                     </div>
                 </div>

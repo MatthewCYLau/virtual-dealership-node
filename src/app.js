@@ -7,7 +7,7 @@ const passport = require('passport')
 
 const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
-const getOrders = require("./utils/getOrders")
+const {getOrders, createOrder} = require("./utils/orders")
 const cookieParser = require('cookie-parser')
 
 const app = express();
@@ -110,7 +110,7 @@ app.get('', (req, res) => {
     }))
 });
 
-app.get('/car/:inventoryId', (req, res) => {
+app.get('/inventory/:inventoryId', (req, res) => {
 
     const user = req.user;
     const inventoryId = req.params.inventoryId;
@@ -137,12 +137,13 @@ app.get('/car/:inventoryId', (req, res) => {
             priceCurrency,
             priceDisclaimer,
             description,
-            user
+            user,
+            inventoryId
         });
     }))
 });
 
-app.get('/portal/orders', auth, (req, res) => {
+app.get('/orders', auth, (req, res) => {
 
     const token = req.cookies['auth_token']
     getOrders("", token, ((err, data) => {
@@ -156,10 +157,33 @@ app.get('/portal/orders', auth, (req, res) => {
             user: req.user
         });
     }))
+})
+
+app.post('/orders', auth, (req, res) => {
+
+    const token = req.cookies['auth_token']
+
+    const inventoryId = req.body.inventoryId;
+
+    createOrder(inventoryId, token, ((err, response, data) => {
+
+        if (err) {
+            return console.log(err)
+        }
+        
+        const responseStatusCode = response.statusCode
+
+        if(responseStatusCode!=201) {
+            console.log('Order is unavailable')
+            return res.redirect('/')
+        }
+        res.redirect('/orders')
+    }))
 
 })
 
-app.get('/portal/orders/:orderId', auth, (req, res) => {
+
+app.get('/orders/:orderId', auth, (req, res) => {
 
     const token = req.cookies['auth_token']
     const orderId = req.params.orderId;
