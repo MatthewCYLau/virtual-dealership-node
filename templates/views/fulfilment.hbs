@@ -1,0 +1,26 @@
+{{>header}}
+{{>nav}}
+
+<div class="container fulfillment-container">
+    <h1>Order Fulfillment</h1>
+    <form class="fulfillment-form" method="POST" action="/fulfilment">
+        <div class="form-group">
+            <label>Order Item ID</label>
+            <input type="text" class="form-control" placeholder="Enter order item ID" name="orderItemId">
+        </div>
+        <div class="form-group">
+            <label>Status Code</label>
+            <select class="form-control" name="statusCode">
+                <option>In Progress</option>
+                <option>Completed</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Status Description</label>
+            <textarea class="form-control" rows="2" name="statusDescription"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Fulfill Order</button>
+    </form>
+</div>
+
+{{>footer}}

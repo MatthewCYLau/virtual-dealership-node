@@ -17,7 +17,7 @@ const getOrders = (orderId, token, callback) => {
     request(options, (err, data) => {
 
         if (err) {
-            callback('Unable to connect to car data service', undefined);
+            callback('Unable to connect to orders service', undefined);
         } else {
             callback(undefined, data);
         };
@@ -46,7 +46,7 @@ const createOrder = (inventoryId, token, callback) => {
     request(options, (err, response, data) => {
 
         if (err) {
-            callback('Unable to connect to car data service', response, undefined);
+            callback('Unable to connect to orders service', response, undefined);
         } else {
             callback(undefined, response, data);
         };

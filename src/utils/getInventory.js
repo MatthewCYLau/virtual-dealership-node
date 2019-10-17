@@ -9,7 +9,7 @@ const getInventory = (inventoryId, callback) => {
     }, (err, data) => {
 
         if (err) {
-            callback('Unable to connect to car data service', undefined);
+            callback('Unable to connect to inventory service', undefined);
         } else {
             callback(undefined, data);
         };

@@ -8,6 +8,7 @@ const passport = require('passport')
 const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
 const {getOrders, createOrder} = require("./utils/orders")
+const fulfilOrder = require("./utils/fulfilOrder")
 const cookieParser = require('cookie-parser')
 
 const app = express();
@@ -175,7 +176,7 @@ app.post('/orders', auth, (req, res) => {
 
         if(responseStatusCode!=201) {
             console.log('Order is unavailable')
-            return res.redirect('/')
+            return res.redirect('/unavailable')
         }
         res.redirect('/orders')
     }))
@@ -215,6 +216,20 @@ app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 });
+
+app.get('/fulfilment', (req, res) => {
+    res.render('fulfilment')
+})
+
+app.post('/fulfilment', (req, res) => {
+
+    console.log(req.body);
+
+})
+
+app.get('/unavailable', (req, res) => {
+    res.render('unavailable')
+})
 
 app.get('*', (req, res) => {
     res.render('404')
