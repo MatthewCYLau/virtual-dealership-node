@@ -16,9 +16,15 @@
 
                     {{#if user}}
                     <li class="nav-item">
+                        <a class="nav-link" href="/orders">View Orders</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
                     {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Sign Up</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/auth/provider">Login</a>
                     </li>
@@ -140,7 +146,7 @@
     <div class="container">
         <h3 class="cta-heading">Find your destined cars today</h3>
 
-        <a href="/auth/provider" class="btn btn-dark btn-lg download-button">Sign Up Now!</a>
+        <a href="/auth/provider" class="btn btn-light btn-lg download-button">Sign Up Now!</a>
 
     </div>
 

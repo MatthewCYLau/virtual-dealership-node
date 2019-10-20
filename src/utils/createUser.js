@@ -1,13 +1,15 @@
 const request = require("request");
 
-const fulfilOrder = (orderItemId, statusCode, statusDescription, callback) => {
+const createUser = (firstName, lastName, email, username, mobile, callback) => {
 
-    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v2/orders/orderItem/history";
+    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/users";
 
     const payload = {
-        'order_item_id': orderItemId,
-        'status_code': statusCode,
-        'status_description': statusDescription
+        'x': firstName,
+        'x': lastName,
+        'x': email,
+        'x': username,
+        'x': mobile
     }
 
     const options = {
@@ -27,4 +29,4 @@ const fulfilOrder = (orderItemId, statusCode, statusDescription, callback) => {
     });
 };
 
-module.exports = fulfilOrder;
+module.exports = createUser;

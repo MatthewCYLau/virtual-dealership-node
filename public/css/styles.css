@@ -199,7 +199,7 @@ p {
   padding: 20px 0;
 }
 
-.order-container, .fulfillment-container, .fulfillment-form {
+.view-container, .fulfillment-form, .order-container {
   padding: 20px 0;
 }
 

@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const getInventory = require("./utils/getInventory")
 const {getOrders, createOrder} = require("./utils/orders")
 const fulfilOrder = require("./utils/fulfilOrder")
+const createUser = require("./utils/createUser")
 const cookieParser = require('cookie-parser')
 
 const app = express();
@@ -160,7 +161,7 @@ app.get('/orders', auth, (req, res) => {
     }))
 })
 
-app.post('/orders', auth, (req, res) => {
+app.post('/orders', (req, res) => {
 
     const token = req.cookies['auth_token']
 
@@ -207,7 +208,8 @@ app.get('/orders/:orderId', auth, (req, res) => {
             orderId: data.body.orderId,
             orderCreatedUTCDateAndTime: data.body.orderCreatedUTCDateAndTime,
             orderStatus,
-            orderItems: data.body.orderItems
+            orderItems: data.body.orderItems,
+            user: req.user
         });
     }))
 });
@@ -221,14 +223,72 @@ app.get('/fulfilment', (req, res) => {
     res.render('fulfilment')
 })
 
+app.get('/fulfilment_confirmed', (req, res) => {
+    res.render('fulfilment_confirmed')
+})
+
 app.post('/fulfilment', (req, res) => {
 
-    console.log(req.body);
+    const orderItemId = req.body.orderItemId;
+    const statusCode = req.body.statusCode
+    const statusDescription = req.body.statusDescription
+    
+    fulfilOrder(orderItemId, statusCode, statusDescription, ((err, response, data) => {
 
+        if (err) {
+            return console.log(err)
+        }
+        
+        const responseStatusCode = response.statusCode
+
+        if(responseStatusCode!=201) {
+            console.log('Order fulfilment failed')
+            res.redirect('/server_error')
+        }
+        
+        res.redirect('/fulfilment_confirmed')
+    }))
 })
+
+app.get('/signup', (req, res) => {
+    res.render('signup', {
+        user: req.user
+    })
+})
+
+app.post('/signup', (req, res) => {
+
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const username = req.body.username;
+    const mobile = req.body.mobile;
+    
+    createUser(firstName, lastName, email, username,mobile, ((err, response, data) => {
+
+        if (err) {
+            return console.log(err)
+        }
+        
+        const responseStatusCode = response.statusCode
+
+        if(responseStatusCode!=201) {
+            console.log('User not created')
+            res.redirect('/server_error')
+        }
+        
+        res.redirect('/')
+    }))
+   
+})
+
 
 app.get('/unavailable', (req, res) => {
     res.render('unavailable')
+})
+
+app.get('/server_error', (req, res) => {
+    res.render('server_error')
 })
 
 app.get('*', (req, res) => {
