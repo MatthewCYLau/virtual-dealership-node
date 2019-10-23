@@ -2,14 +2,17 @@ const request = require("request");
 
 const createUser = (firstName, lastName, email, username, mobile, callback) => {
 
-    const url = "http://vd-inventory-query-rds.us-e1.cloudhub.io/v1/users";
+    const url = "http://vd-users-sapi.us-e1.cloudhub.io/api/users";
+
+    const customerID = (Math.floor(100000000 + Math.random() * 900000000)).toString()
 
     const payload = {
-        'x': firstName,
-        'x': lastName,
-        'x': email,
-        'x': username,
-        'x': mobile
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'login': username,
+        'mobilePhone': mobile,
+        'customerID': customerID
     }
 
     const options = {

@@ -243,7 +243,7 @@ app.post('/fulfilment', (req, res) => {
 
         if(responseStatusCode!=201) {
             console.log('Order fulfilment failed')
-            res.redirect('/server_error')
+            return res.redirect('/server_error')
         }
         
         res.redirect('/fulfilment_confirmed')
@@ -274,7 +274,7 @@ app.post('/signup', (req, res) => {
 
         if(responseStatusCode!=201) {
             console.log('User not created')
-            res.redirect('/server_error')
+            return res.redirect('/server_error')
         }
         
         res.redirect('/')
