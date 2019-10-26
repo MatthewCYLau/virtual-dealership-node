@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({
 //Use session 
 app.use(session({
     secret: 'this should be secure',
-    resave: true,
+    resave: false,
     saveUninitialized: false
 }));
 
@@ -227,8 +227,10 @@ app.get('/orders/:orderId', auth, (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
+    res.clearCookie("auth_token");
+    req.session.destroy(function (err) {
+        res.redirect('/'); //Inside a callback… bulletproof!
+    });
 });
 
 
