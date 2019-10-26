@@ -1,18 +1,24 @@
 const session = require('express-session');
-const path = require('path');
 const express = require('express');
+const app = express();
+const path = require('path');
 const hbs = require('hbs');
 const port = process.env.PORT
 const passport = require('passport')
-
 const bodyParser = require("body-parser");
-const getInventory = require("./utils/getInventory")
-const {getOrders, createOrder} = require("./utils/orders")
-const fulfilOrder = require("./utils/fulfilOrder")
-const createUser = require("./utils/createUser")
 const cookieParser = require('cookie-parser')
 
-const app = express();
+//Set-up method calls
+const getInventory = require("./utils/getInventory")
+const {
+    getOrders,
+    createOrder
+} = require("./utils/orders")
+const createUser = require("./utils/createUser")
+
+//Setup routers
+const availability = require('./routers/availability');
+const fulfilment = require('./routers/fulfilment');
 
 //Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, '../public');
@@ -32,11 +38,13 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+//Use session 
 app.use(session({
     secret: 'this should be secure',
     resave: true,
     saveUninitialized: false
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -95,6 +103,10 @@ const auth = (req, res, next) => {
         res.redirect('/auth/provider');
     }
 }
+
+//Uses routers
+app.use(availability);
+app.use(fulfilment);
 
 //Routing
 app.get('', (req, res) => {
@@ -172,10 +184,10 @@ app.post('/orders', (req, res) => {
         if (err) {
             return console.log(err)
         }
-        
+
         const responseStatusCode = response.statusCode
 
-        if(responseStatusCode!=201) {
+        if (responseStatusCode != 201) {
             console.log('Order is unavailable')
             return res.redirect('/unavailable')
         }
@@ -219,36 +231,6 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/fulfilment', (req, res) => {
-    res.render('fulfilment')
-})
-
-app.get('/fulfilment_confirmed', (req, res) => {
-    res.render('fulfilment_confirmed')
-})
-
-app.post('/fulfilment', (req, res) => {
-
-    const orderItemId = req.body.orderItemId;
-    const statusCode = req.body.statusCode
-    const statusDescription = req.body.statusDescription
-    
-    fulfilOrder(orderItemId, statusCode, statusDescription, ((err, response, data) => {
-
-        if (err) {
-            return console.log(err)
-        }
-        
-        const responseStatusCode = response.statusCode
-
-        if(responseStatusCode!=201) {
-            console.log('Order fulfilment failed')
-            return res.redirect('/server_error')
-        }
-        
-        res.redirect('/fulfilment_confirmed')
-    }))
-})
 
 app.get('/signup', (req, res) => {
     res.render('signup', {
@@ -263,25 +245,24 @@ app.post('/signup', (req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     const mobile = req.body.mobile;
-    
-    createUser(firstName, lastName, email, username,mobile, ((err, response, data) => {
+
+    createUser(firstName, lastName, email, username, mobile, ((err, response, data) => {
 
         if (err) {
             return console.log(err)
         }
-        
+
         const responseStatusCode = response.statusCode
 
-        if(responseStatusCode!=201) {
+        if (responseStatusCode != 201) {
             console.log('User not created')
             return res.redirect('/server_error')
         }
-        
+
         res.redirect('/')
     }))
-   
-})
 
+})
 
 app.get('/unavailable', (req, res) => {
     res.render('unavailable')

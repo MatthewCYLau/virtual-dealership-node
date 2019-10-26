@@ -1,0 +1,15 @@
+{{>header}}
+{{>nav}}
+
+<div class="container view-container">
+    <h1>Update Inventory Availability</h1>
+    <form class="availability-form" method="POST" action="/availability">
+        <div class="form-group">
+            <label>Inventory ID</label>
+            <input type="text" class="form-control" placeholder="Enter inventory ID" name="inventoryId">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Make Available</button>
+    </form>
+</div>
+
+{{>footer}}
